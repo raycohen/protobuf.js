@@ -786,11 +786,12 @@ export abstract class NamespaceBase extends ReflectionObject {
     /**
      * Adds a nested object to this namespace.
      * @param object Nested object to add
+     * @param [deferOnAddRecursion] If `true`, skips recursive root setup in `onAdd`
      * @returns `this`
      * @throws {TypeError} If arguments are invalid
      * @throws {Error} If there is already a nested object with this name
      */
-    public add(object: ReflectionObject): Namespace;
+    public add(object: ReflectionObject, deferOnAddRecursion?: boolean): Namespace;
 
     /**
      * Removes a nested object from this namespace.
@@ -936,8 +937,9 @@ export abstract class ReflectionObject {
     /**
      * Called when this object is added to a parent.
      * @param parent Parent added to
+     * @param [deferRecursion] If `true`, skips recursive setup of the root
      */
-    public onAdd(parent: ReflectionObject): void;
+    public onAdd(parent: ReflectionObject, deferRecursion?: boolean): void;
 
     /**
      * Called when this object is removed from a parent.
