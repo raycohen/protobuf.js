@@ -211,11 +211,12 @@ Namespace.prototype.getEnum = function getEnum(name) {
 /**
  * Adds a nested object to this namespace.
  * @param {ReflectionObject} object Nested object to add
+ * @param {boolean} [deferOnAddRecursion] If `true`, skips recursive root setup in `onAdd`
  * @returns {Namespace} `this`
  * @throws {TypeError} If arguments are invalid
  * @throws {Error} If there is already a nested object with this name
  */
-Namespace.prototype.add = function add(object) {
+Namespace.prototype.add = function add(object, deferOnAddRecursion) {
 
     if (!(object instanceof Field && object.extend !== undefined || object instanceof Type  || object instanceof OneOf || object instanceof Enum || object instanceof Service || object instanceof Namespace))
         throw TypeError("object must be a valid nested object");
@@ -229,7 +230,7 @@ Namespace.prototype.add = function add(object) {
                 // replace plain namespace but keep existing nested elements and options
                 var nested = prev.nestedArray;
                 for (var i = 0; i < nested.length; ++i)
-                    object.add(nested[i]);
+                    object.add(nested[i], true);
                 this.remove(prev);
                 if (!this.nested)
                     this.nested = {};
@@ -249,7 +250,7 @@ Namespace.prototype.add = function add(object) {
         }
     }
 
-    object.onAdd(this);
+    object.onAdd(this, deferOnAddRecursion);
     return clearCache(this);
 };
 

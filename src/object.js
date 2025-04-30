@@ -140,15 +140,16 @@ ReflectionObject.prototype.toJSON = /* istanbul ignore next */ function toJSON()
 /**
  * Called when this object is added to a parent.
  * @param {ReflectionObject} parent Parent added to
+ * @param {boolean} [deferRecursion] If `true`, skips recursive setup of the root
  * @returns {undefined}
  */
-ReflectionObject.prototype.onAdd = function onAdd(parent) {
+ReflectionObject.prototype.onAdd = function onAdd(parent, deferRecursion) {
     if (this.parent && this.parent !== parent)
         this.parent.remove(this);
     this.parent = parent;
     this.resolved = false;
     var root = parent.root;
-    if (root instanceof Root)
+    if (root instanceof Root && !deferRecursion)
         root._handleAdd(this);
 };
 
